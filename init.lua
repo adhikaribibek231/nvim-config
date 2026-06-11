@@ -1,5 +1,4 @@
 --[[
-
 =====================================================================
 ==================== READ THIS BEFORE CONTINUING ====================
 =====================================================================
@@ -89,7 +88,8 @@ P.S. You can delete this when you're done too. It's your config now! :)
 --  NOTE: Must happen before plugins are loaded (otherwise wrong leader will be used)
 vim.g.mapleader = ' '
 vim.g.maplocalleader = ' '
-
+vim.opt.clipboard = 'unnamedplus'
+vim.keymap.set('t', '<Esc>', [[<C-\><C-n>]], { desc = 'Exit terminal mode' })
 -- Set to true if you have a Nerd Font installed and selected in the terminal
 vim.g.have_nerd_font = false
 
@@ -102,7 +102,7 @@ vim.g.have_nerd_font = false
 vim.o.number = true
 -- You can also add relative line numbers, to help with jumping.
 --  Experiment for yourself to see if you like it!
--- vim.o.relativenumber = true
+vim.o.relativenumber = true
 
 -- Enable mouse mode, can be useful for resizing splits for example!
 vim.o.mouse = 'a'
@@ -257,7 +257,9 @@ rtp:prepend(lazypath)
 require('lazy').setup({
   -- NOTE: Plugins can be added via a link or github org/name. To run setup automatically, use `opts = {}`
   { 'NMAC427/guess-indent.nvim', opts = {} },
-
+  { 'numToStr/Comment.nvim', opts = {} },
+  { 'stevearc/oil.nvim', opts = {default_file_explorer = false} },
+  { 'windwp/nvim-autopairs',opts = {} },
   -- Alternatively, use `config = function() ... end` for full control over the configuration.
   -- If you prefer to call `setup` explicitly, use:
   --    {
@@ -593,6 +595,11 @@ require('lazy').setup({
       --  Feel free to add/remove any LSPs that you want here. They will automatically be installed.
       --  See `:help lsp-config` for information about keys and how to configure
       local servers = {
+        basedpyright ={},
+        ts_ls ={},
+        html ={},
+        cssls = {},
+        jsonls={},
         -- clangd = {},
         -- gopls = {},
         -- pyright = {},
@@ -911,3 +918,67 @@ require('lazy').setup({
 
 -- The line beneath this is called `modeline`. See `:help modeline`
 -- vim: ts=2 sts=2 sw=2 et
+--
+-- -- Map Ctrl + Z to Undo
+vim.keymap.set('n', '<C-z>', 'u', { desc = 'Undo' })
+vim.keymap.set('i', '<C-z>', '<C-o>u', { desc = 'Undo in insert mode' })
+vim.keymap.set('v', '<C-z>', 'u', { desc = 'Undo in visual mode' })
+
+-- Map Ctrl + Y to Redo
+vim.keymap.set('n', '<C-y>', '<C-r>', { desc = 'Redo' })
+vim.keymap.set('i', '<C-y>', '<C-o><C-r>', { desc = 'Redo in insert mode' })
+vim.keymap.set('v', '<C-y>', '<C-r>', { desc = 'Redo in visual mode' })
+
+
+vim.keymap.set('n', '-', '<cmd>Oil<CR>', { desc = 'Open Oil' })
+
+vim.keymap.set('n', '<leader>o', ':Explore<CR>', { desc = 'Open Netrw' })
+
+
+vim.keymap.set('i', 'jk', '<Esc>', { desc = 'Exit insert mode with jk' })
+
+
+-- ==========================================
+-- MOVE LINES WITH ALT + J/K (VS Code Style)
+-- ==========================================
+-- Normal Mode (Single Line)
+vim.keymap.set('n', '<A-j>', ':m .+1<CR>==', { desc = 'Move line down' })
+vim.keymap.set('n', '<A-k>', ':m .-2<CR>==', { desc = 'Move line up' })
+
+-- Visual Mode (Highlighted Block)
+vim.keymap.set('v', '<A-j>', ":m '>+1<CR>gv=gv", { desc = 'Move selection down' })
+vim.keymap.set('v', '<A-k>', ":m '<-2<CR>gv=gv", { desc = 'Move selection up' })
+
+-- ==========================================
+-- MOVE LINES WITH ARROW KEYS
+-- ==========================================
+-- Normal Mode (Single Line)
+vim.keymap.set('n', '<Down>', ':m .+1<CR>==', { desc = 'Move line down' })
+vim.keymap.set('n', '<Up>', ':m .-2<CR>==', { desc = 'Move line up' })
+
+-- Visual Mode (Highlighted Block)
+vim.keymap.set('v', '<Down>', ":m '>+1<CR>gv=gv", { desc = 'Move selection down' })
+vim.keymap.set('v', '<Up>', ":m '<-2<CR>gv=gv", { desc = 'Move selection up' })
+
+
+
+
+vim.keymap.set('n', '<C-h>', '<C-w>h', { desc = 'Go to left window' })
+vim.keymap.set('n', '<C-j>', '<C-w>j', { desc = 'Go to bottom window' })
+vim.keymap.set('n', '<C-k>', '<C-w>k', { desc = 'Go to top window' })
+vim.keymap.set('n', '<C-l>', '<C-w>l', { desc = 'Go to right window' })
+
+vim.keymap.set('x', '<leader>p', [["_dP]], { desc = 'Paste without losing clipboard content' })
+
+-- Find files by name (like Ctrl + P in VS Code)
+vim.keymap.set('n', '<leader>ff', '<cmd>Telescope find_files<CR>', { desc = 'Find Files' })
+
+-- Search for specific text inside all files (Live Grep)
+vim.keymap.set('n', '<leader>fg', '<cmd>Telescope live_grep<CR>', { desc = 'Find Text' })
+
+vim.keymap.set('n', '<C-_>', 'gcc', { remap = true })
+vim.keymap.set('v', '<C-_>', 'gc', { remap = true })
+
+vim.keymap.set('n', 'gd', vim.lsp.buf.definition, {
+  desc = 'Go to definition',
+})
