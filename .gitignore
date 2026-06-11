@@ -7,6 +7,23 @@ spell/
 
 # You can uncomment this yourself if you want to lock the lazy-lock.json,
 # but for kickstart, it makes sense to leave it ignored.
-lazy-lock.json
 
+# lazy-lock.json
+
+# Local plugin installation
+.lazy/
+
+# Mason language servers
+mason/
+
+# Temporary files
+*.log
+*.tmp
+*.swp
+*.swo
+
+# OS files
 .DS_Store
+
+# Local sessions
+Session.vim
