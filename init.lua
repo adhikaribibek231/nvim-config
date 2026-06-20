@@ -30,9 +30,7 @@ vim.g.have_nerd_font = true
 
 -- Use the system clipboard.
 vim.opt.clipboard = 'unnamedplus'
-vim.schedule(function()
-  vim.o.clipboard = 'unnamedplus'
-end)
+vim.schedule(function() vim.o.clipboard = 'unnamedplus' end)
 
 -- Make <Esc> leave terminal mode.
 vim.keymap.set('t', '<Esc>', [[<C-\><C-n>]], { desc = 'Exit terminal mode' })
@@ -128,10 +126,6 @@ vim.keymap.set('n', '<A-j>', ':m .+1<CR>==', { desc = 'Move line down' })
 vim.keymap.set('n', '<A-k>', ':m .-2<CR>==', { desc = 'Move line up' })
 vim.keymap.set('v', '<A-j>', ":m '>+1<CR>gv=gv", { desc = 'Move selection down' })
 vim.keymap.set('v', '<A-k>', ":m '<-2<CR>gv=gv", { desc = 'Move selection up' })
-vim.keymap.set('n', '<Down>', ':m .+1<CR>==', { desc = 'Move line down' })
-vim.keymap.set('n', '<Up>', ':m .-2<CR>==', { desc = 'Move line up' })
-vim.keymap.set('v', '<Down>', ":m '>+1<CR>gv=gv", { desc = 'Move selection down' })
-vim.keymap.set('v', '<Up>', ":m '<-2<CR>gv=gv", { desc = 'Move selection up' })
 
 -- Paste over selection without replacing clipboard content.
 vim.keymap.set('x', '<leader>p', [['_dP]], { desc = 'Paste without losing clipboard' })
@@ -168,9 +162,7 @@ vim.keymap.set({ 'n', 't' }, '<C-t>', '<cmd>ToggleTerm<CR>', { desc = 'Toggle fl
 vim.api.nvim_create_autocmd('TextYankPost', {
   desc = 'Highlight copied text briefly',
   group = vim.api.nvim_create_augroup('highlight-yank', { clear = true }),
-  callback = function()
-    vim.hl.on_yank()
-  end,
+  callback = function() vim.hl.on_yank() end,
 })
 
 -- ============================================================
@@ -180,9 +172,7 @@ local lazypath = vim.fn.stdpath 'data' .. '/lazy/lazy.nvim'
 if not (vim.uv or vim.loop).fs_stat(lazypath) then
   local lazyrepo = 'https://github.com/folke/lazy.nvim.git'
   local out = vim.fn.system { 'git', 'clone', '--filter=blob:none', '--branch=stable', lazyrepo, lazypath }
-  if vim.v.shell_error ~= 0 then
-    error('Error cloning lazy.nvim:\n' .. out)
-  end
+  if vim.v.shell_error ~= 0 then error('Error cloning lazy.nvim:\n' .. out) end
 end
 vim.opt.rtp:prepend(lazypath)
 
@@ -385,9 +375,7 @@ require('lazy').setup({
       {
         'nvim-telescope/telescope-fzf-native.nvim',
         build = 'make',
-        cond = function()
-          return vim.fn.executable 'make' == 1
-        end,
+        cond = function() return vim.fn.executable 'make' == 1 end,
       },
       { 'nvim-telescope/telescope-ui-select.nvim' },
       { 'nvim-tree/nvim-web-devicons', enabled = vim.g.have_nerd_font },
@@ -446,25 +434,33 @@ require('lazy').setup({
       })
 
       -- Fuzzy search inside the current buffer.
-      vim.keymap.set('n', '<leader>/', function()
-        builtin.current_buffer_fuzzy_find(themes.get_dropdown {
-          winblend = 10,
-          previewer = false,
-        })
-      end, { desc = 'Fuzzy search current buffer' })
+      vim.keymap.set(
+        'n',
+        '<leader>/',
+        function()
+          builtin.current_buffer_fuzzy_find(themes.get_dropdown {
+            winblend = 10,
+            previewer = false,
+          })
+        end,
+        { desc = 'Fuzzy search current buffer' }
+      )
 
       -- Search only inside currently open files.
-      vim.keymap.set('n', '<leader>s/', function()
-        builtin.live_grep {
-          grep_open_files = true,
-          prompt_title = 'Live Grep in Open Files',
-        }
-      end, { desc = '[S]earch in open files' })
+      vim.keymap.set(
+        'n',
+        '<leader>s/',
+        function()
+          builtin.live_grep {
+            grep_open_files = true,
+            prompt_title = 'Live Grep in Open Files',
+          }
+        end,
+        { desc = '[S]earch in open files' }
+      )
 
       -- Search your Neovim config quickly.
-      vim.keymap.set('n', '<leader>sn', function()
-        builtin.find_files { cwd = vim.fn.stdpath 'config' }
-      end, { desc = '[S]earch [N]eovim files' })
+      vim.keymap.set('n', '<leader>sn', function() builtin.find_files { cwd = vim.fn.stdpath 'config' } end, { desc = '[S]earch [N]eovim files' })
     end,
   },
 
@@ -518,9 +514,7 @@ require('lazy').setup({
           end
 
           if client and client:supports_method('textDocument/inlayHint', event.buf) then
-            map('<leader>th', function()
-              vim.lsp.inlay_hint.enable(not vim.lsp.inlay_hint.is_enabled { bufnr = event.buf })
-            end, '[T]oggle inlay [H]ints')
+            map('<leader>th', function() vim.lsp.inlay_hint.enable(not vim.lsp.inlay_hint.is_enabled { bufnr = event.buf }) end, '[T]oggle inlay [H]ints')
           end
         end,
       })
@@ -564,9 +558,7 @@ require('lazy').setup({
         on_init = function(client)
           if client.workspace_folders then
             local path = client.workspace_folders[1].name
-            if path ~= vim.fn.stdpath 'config' and (vim.uv.fs_stat(path .. '/.luarc.json') or vim.uv.fs_stat(path .. '/.luarc.jsonc')) then
-              return
-            end
+            if path ~= vim.fn.stdpath 'config' and (vim.uv.fs_stat(path .. '/.luarc.json') or vim.uv.fs_stat(path .. '/.luarc.jsonc')) then return end
           end
 
           client.config.settings.Lua = vim.tbl_deep_extend('force', client.config.settings.Lua, {
@@ -596,9 +588,7 @@ require('lazy').setup({
     keys = {
       {
         '<leader>f',
-        function()
-          require('conform').format { async = true, lsp_format = 'fallback' }
-        end,
+        function() require('conform').format { async = true, lsp_format = 'fallback' } end,
         mode = '',
         desc = '[F]ormat buffer',
       },
@@ -608,9 +598,7 @@ require('lazy').setup({
       format_on_save = function(bufnr)
         -- C/C++ formatting is disabled because style can vary widely.
         local disable_filetypes = { c = true, cpp = true }
-        if disable_filetypes[vim.bo[bufnr].filetype] then
-          return nil
-        end
+        if disable_filetypes[vim.bo[bufnr].filetype] then return nil end
         return { timeout_ms = 500, lsp_format = 'fallback' }
       end,
       formatters_by_ft = {
@@ -633,9 +621,7 @@ require('lazy').setup({
         'L3MON4D3/LuaSnip',
         version = '2.*',
         build = (function()
-          if vim.fn.has 'win32' == 1 or vim.fn.executable 'make' == 0 then
-            return
-          end
+          if vim.fn.has 'win32' == 1 or vim.fn.executable 'make' == 0 then return end
           return 'make install_jsregexp'
         end)(),
         opts = {},
@@ -705,9 +691,7 @@ require('lazy').setup({
       vim.api.nvim_create_autocmd('FileType', {
         pattern = filetypes,
         group = vim.api.nvim_create_augroup('treesitter-start', { clear = true }),
-        callback = function()
-          pcall(vim.treesitter.start)
-        end,
+        callback = function() pcall(vim.treesitter.start) end,
       })
     end,
   },
