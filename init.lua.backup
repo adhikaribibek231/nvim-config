@@ -258,8 +258,24 @@ require('lazy').setup({
   -- NOTE: Plugins can be added via a link or github org/name. To run setup automatically, use `opts = {}`
   { 'NMAC427/guess-indent.nvim', opts = {} },
   { 'numToStr/Comment.nvim', opts = {} },
-  { 'stevearc/oil.nvim', opts = {default_file_explorer = false} },
-  { 'windwp/nvim-autopairs',opts = {} },
+  { 'stevearc/oil.nvim', opts = { default_file_explorer = false } },
+  { 'windwp/nvim-autopairs', opts = {} },
+  {
+    'sphamba/smear-cursor.nvim',
+    opts = {
+      stiffness = 0.8,
+      trailing_stiffness = 0.5,
+      smear_between_buffers = true,
+      smear_between_neighbor_lines = true,
+    },
+  },
+  {
+    'akinsho/toggleterm.nvim',
+    version = '*',
+    opts = {
+      direction = 'float',
+    },
+  },
   -- Alternatively, use `config = function() ... end` for full control over the configuration.
   -- If you prefer to call `setup` explicitly, use:
   --    {
@@ -595,11 +611,11 @@ require('lazy').setup({
       --  Feel free to add/remove any LSPs that you want here. They will automatically be installed.
       --  See `:help lsp-config` for information about keys and how to configure
       local servers = {
-        basedpyright ={},
-        ts_ls ={},
-        html ={},
+        basedpyright = {},
+        ts_ls = {},
+        html = {},
         cssls = {},
-        jsonls={},
+        jsonls = {},
         -- clangd = {},
         -- gopls = {},
         -- pyright = {},
@@ -858,9 +874,10 @@ require('lazy').setup({
 
   { -- Highlight, edit, and navigate code
     'nvim-treesitter/nvim-treesitter',
+    branch = 'master',
     config = function()
       local filetypes = { 'bash', 'c', 'diff', 'html', 'lua', 'luadoc', 'markdown', 'markdown_inline', 'query', 'vim', 'vimdoc' }
-      require('nvim-treesitter').install(filetypes)
+      require('nvim-treesitter').install(filetypes):wait(300000)
       vim.api.nvim_create_autocmd('FileType', {
         pattern = filetypes,
         callback = function() vim.treesitter.start() end,
@@ -929,14 +946,11 @@ vim.keymap.set('n', '<C-y>', '<C-r>', { desc = 'Redo' })
 vim.keymap.set('i', '<C-y>', '<C-o><C-r>', { desc = 'Redo in insert mode' })
 vim.keymap.set('v', '<C-y>', '<C-r>', { desc = 'Redo in visual mode' })
 
-
 vim.keymap.set('n', '-', '<cmd>Oil<CR>', { desc = 'Open Oil' })
 
 vim.keymap.set('n', '<leader>o', ':Explore<CR>', { desc = 'Open Netrw' })
 
-
 vim.keymap.set('i', 'jk', '<Esc>', { desc = 'Exit insert mode with jk' })
-
 
 -- ==========================================
 -- MOVE LINES WITH ALT + J/K (VS Code Style)
@@ -960,9 +974,6 @@ vim.keymap.set('n', '<Up>', ':m .-2<CR>==', { desc = 'Move line up' })
 vim.keymap.set('v', '<Down>', ":m '>+1<CR>gv=gv", { desc = 'Move selection down' })
 vim.keymap.set('v', '<Up>', ":m '<-2<CR>gv=gv", { desc = 'Move selection up' })
 
-
-
-
 vim.keymap.set('n', '<C-h>', '<C-w>h', { desc = 'Go to left window' })
 vim.keymap.set('n', '<C-j>', '<C-w>j', { desc = 'Go to bottom window' })
 vim.keymap.set('n', '<C-k>', '<C-w>k', { desc = 'Go to top window' })
@@ -981,4 +992,20 @@ vim.keymap.set('v', '<C-_>', 'gc', { remap = true })
 
 vim.keymap.set('n', 'gd', vim.lsp.buf.definition, {
   desc = 'Go to definition',
+})
+
+vim.keymap.set('n', '<leader>ts', function()
+  vim.cmd 'split'
+  vim.cmd 'terminal'
+  vim.cmd 'startinsert'
+end, { desc = 'Terminal Split' })
+
+vim.keymap.set('n', '<leader>tv', function()
+  vim.cmd 'vsplit'
+  vim.cmd 'terminal'
+  vim.cmd 'startinsert'
+end, { desc = 'Terminal Vertical' })
+
+vim.keymap.set({ 'n', 't' }, '<C-t>', '<cmd>ToggleTerm<CR>', {
+  desc = 'Toggle Terminal',
 })
