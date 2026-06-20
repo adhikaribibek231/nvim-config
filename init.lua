@@ -155,7 +155,7 @@ vim.keymap.set('n', '<leader>tv', function()
 end, { desc = 'Terminal vertical split' })
 
 vim.keymap.set({ 'n', 't' }, '<C-t>', '<cmd>ToggleTerm<CR>', { desc = 'Toggle floating terminal' })
-
+vim.keymap.set('n', '<leader>x', '<cmd>bd<CR>', { desc = 'Close buffer' })
 -- ============================================================
 -- Autocommands
 -- ============================================================
@@ -344,7 +344,24 @@ require('lazy').setup({
       },
     },
   },
-
+  {
+    'johnseth97/codex.nvim',
+    dependencies = { 'nvim-lua/plenary.nvim' },
+    cmd = { 'Codex', 'CodexToggle' },
+    opts = {
+      border = 'rounded',
+      width = 0.85,
+      height = 0.85,
+      panel = false,
+    },
+    keys = {
+      {
+        '<leader>cc',
+        function() require('codex').toggle() end,
+        desc = 'Toggle Codex',
+      },
+    },
+  },
   -- ------------------------------------------------------------
   -- Which-key: popup that shows available keymaps
   -- ------------------------------------------------------------
@@ -397,6 +414,7 @@ require('lazy').setup({
             height = 0.85,
             preview_width = 0.55,
           },
+          preview = { treesitter = false },
         },
         extensions = {
           ['ui-select'] = { themes.get_dropdown() },
