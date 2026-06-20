@@ -1,4 +1,3 @@
--- ============================================================
 -- Bibek's Neovim Configuration
 -- ============================================================
 -- This file keeps your original Kickstart-based setup, but removes
@@ -11,6 +10,7 @@
 --   - Keep comments short and useful so you can customize later.
 --
 -- After replacing your init.lua with this file, run:
+-- ============================================================
 --   :Lazy sync
 -- Then restart Neovim.
 --
@@ -655,7 +655,6 @@ require('lazy').setup({
       require('mini.surround').setup()
     end,
   },
-
   -- Treesitter syntax highlighting.
   {
     'nvim-treesitter/nvim-treesitter',
@@ -664,10 +663,7 @@ require('lazy').setup({
       ensure_installed = {
         'bash',
         'c',
-        'diff',
-        'html',
         'lua',
-        'luadoc',
         'markdown',
         'markdown_inline',
         'query',
@@ -678,9 +674,10 @@ require('lazy').setup({
         'typescript',
         'json',
         'css',
+        'html',
       },
       highlight = { enable = true },
-      indent = { enable = true },
+      indent = { enable = false },
     },
     config = function(_, opts) require('nvim-treesitter.configs').setup(opts) end,
   },
