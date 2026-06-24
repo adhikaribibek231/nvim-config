@@ -69,6 +69,18 @@ vim.o.timeoutlen = 300
 vim.o.splitright = true
 vim.o.splitbelow = true
 
+-- Make split borders easier to see.
+vim.opt.fillchars = {
+  vert = '┃',
+  horiz = '━',
+  horizup = '┻',
+  horizdown = '┳',
+  vertleft = '┫',
+  vertright = '┣',
+  verthoriz = '╋',
+  eob = ' ',
+}
+
 -- Show useful whitespace markers.
 vim.o.list = true
 vim.opt.listchars = { tab = '» ', trail = '·', nbsp = '␣' }
@@ -156,6 +168,15 @@ end, { desc = 'Terminal vertical split' })
 
 vim.keymap.set({ 'n', 't' }, '<C-t>', '<cmd>ToggleTerm<CR>', { desc = 'Toggle floating terminal' })
 vim.keymap.set('n', '<leader>x', '<cmd>bd<CR>', { desc = 'Close buffer' })
+
+vim.keymap.set('n', '<leader>w', '<cmd>w<CR>', { desc = 'Save file' })
+
+vim.keymap.set({ 'n', 'i', 'v' }, '<C-s>', function() vim.cmd 'write' end, { desc = 'Save file' })
+
+vim.keymap.set('n', '<leader>Q', '<cmd>wqa<CR>', {
+  desc = 'Save all and quit',
+})
+
 -- ============================================================
 -- Autocommands
 -- ============================================================
@@ -176,6 +197,34 @@ if not (vim.uv or vim.loop).fs_stat(lazypath) then
 end
 vim.opt.rtp:prepend(lazypath)
 
+-- Show filename label at the top of each split/window.
+_G.winbar_filename = function()
+  local buftype = vim.bo.buftype
+  local filetype = vim.bo.filetype
+
+  if filetype == 'neo-tree' then return '  Explorer' end
+
+  if filetype == 'oil' then return '  Oil' end
+
+  if buftype == 'terminal' then return '  Terminal' end
+
+  local path = vim.api.nvim_buf_get_name(0)
+
+  if path == '' then return '  [No Name]' end
+
+  local filename = vim.fn.fnamemodify(path, ':t')
+  local parent = vim.fn.fnamemodify(path, ':h:t')
+
+  local modified = vim.bo.modified and ' ●' or ''
+  local readonly = vim.bo.readonly and ' ' or ''
+
+  if parent == '' then return '  ' .. filename .. modified .. readonly end
+
+  return '  ' .. parent .. '/' .. filename .. modified .. readonly
+end
+
+vim.o.winbar = '%{%v:lua.winbar_filename()%}'
+
 -- ============================================================
 -- Plugins
 -- ============================================================
@@ -188,7 +237,10 @@ require('lazy').setup({
   { 'stevearc/oil.nvim', opts = { default_file_explorer = false } }, -- Edit directories like buffers.
   { 'windwp/nvim-autopairs', opts = {} }, -- Auto-close brackets, quotes, etc.
   { 'nvim-tree/nvim-web-devicons', enabled = vim.g.have_nerd_font }, -- File icons for UI plugins.
-
+  {
+    'rmagatti/auto-session',
+    opts = {},
+  },
   -- Smooth cursor animation.
   {
     'sphamba/smear-cursor.nvim',
@@ -233,6 +285,21 @@ require('lazy').setup({
         },
       }
       vim.cmd.colorscheme 'tokyonight-moon'
+      --stronger split separator color.
+      vim.api.nvim_set_hl(0, 'WinSeparator', {
+        fg = '#7aa2f7',
+        bold = true,
+      })
+      -- Active and inactive split filename bars.
+      vim.api.nvim_set_hl(0, 'WinBar', {
+        fg = '#c0caf5',
+        bg = '#1f2335',
+        bold = true,
+      })
+      vim.api.nvim_set_hl(0, 'WinBarNC', {
+        fg = '#565f89',
+        bg = '#1a1b26',
+      })
     end,
   },
 
@@ -286,6 +353,11 @@ require('lazy').setup({
       'rcarriga/nvim-notify',
     },
     opts = {
+      lsp = {
+        progress = {
+          enabled = false,
+        },
+      },
       presets = {
         bottom_search = true,
         command_palette = true,
@@ -490,7 +562,7 @@ require('lazy').setup({
     dependencies = {
       { 'mason-org/mason.nvim', opts = {} },
       'WhoIsSethDaniel/mason-tool-installer.nvim',
-      { 'j-hui/fidget.nvim', opts = {} },
+      -- { 'j-hui/fidget.nvim', opts = {progress = {suppress_on_insert} = true}, },
       'saghen/blink.cmp',
     },
     config = function()
@@ -646,7 +718,14 @@ require('lazy').setup({
       },
     },
     opts = {
-      keymap = { preset = 'default' },
+      keymap = {
+        preset = 'default',
+
+        ['<Tab>'] = { 'select_and_accept', 'fallback' },
+        ['<S-Tab>'] = { 'select_prev', 'fallback' },
+
+        ['<CR>'] = { 'accept', 'fallback' },
+      },
       appearance = { nerd_font_variant = 'mono' },
       completion = {
         documentation = { auto_show = false, auto_show_delay_ms = 500 },
