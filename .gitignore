@@ -1,29 +1,42 @@
+# Generated help tags
 tags
-test.sh
+doc/tags
+
+# Local Neovim state
+.lazy/
+mason/
+spell/
+Session.vim
+shada
+swap/
+undo/
+backup/
+view/
+
+# Local editor/tooling files
 .luarc.json
+.nvim.lua
+.exrc
+test.sh
 nvim
 
-spell/
+# Local assistant/workspace metadata
+.codex
+.codex/
+.agent
+.agent/
+.agents
+.agents/
 
-# You can uncomment this yourself if you want to lock the lazy-lock.json,
-# but for kickstart, it makes sense to leave it ignored.
-
-# lazy-lock.json
-
-# Local plugin installation
-.lazy/
-
-# Mason language servers
-mason/
-
-# Temporary files
+# Backups and temporary files
+*.backup
+*.bak
 *.log
 *.tmp
 *.swp
 *.swo
+*~
 
 # OS files
 .DS_Store
-
-# Local sessions
-Session.vim
+Thumbs.db

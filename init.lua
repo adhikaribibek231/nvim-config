@@ -1,5 +1,5 @@
 -- ============================================================
--- Bibek's Neovim Configuration
+-- Personal Neovim Configuration
 -- ============================================================
 -- This file keeps your original Kickstart-based setup, but removes
 -- the large Kickstart guide comments and adds modern UI improvements.
@@ -232,6 +232,26 @@ require('lazy').setup({
   -- ------------------------------------------------------------
   -- Small quality-of-life plugins
   -- ------------------------------------------------------------
+  {
+    'andweeb/presence.nvim',
+    --    event = 'VeryLazy',
+    opts = {
+      auto_update = true,
+      neovim_image_text = 'Neovim',
+      main_image = 'neovim',
+      client_id = '793271441293967371',
+      log_level = nil,
+      debounce_timeout = 10,
+      enable_line_number = false,
+      blacklist = {},
+      buttons = true,
+      file_assets = {},
+      show_time = true,
+      editing_text = 'Coding',
+      reading_text = 'Reading code',
+      workspace_text = 'Working on a project',
+    },
+  },
   { 'NMAC427/guess-indent.nvim', opts = {} }, -- Detect indentation style automatically.
   { 'numToStr/Comment.nvim', opts = {} }, -- gcc/gc comment toggling.
   { 'stevearc/oil.nvim', opts = { default_file_explorer = false } }, -- Edit directories like buffers.
@@ -355,6 +375,9 @@ require('lazy').setup({
     opts = {
       lsp = {
         progress = {
+          enabled = false,
+        },
+        signature = {
           enabled = false,
         },
       },
@@ -725,6 +748,7 @@ require('lazy').setup({
         ['<S-Tab>'] = { 'select_prev', 'fallback' },
 
         ['<CR>'] = { 'accept', 'fallback' },
+        ['<C-k>'] = { 'show_signature', 'hide_signature', 'fallback' },
       },
       appearance = { nerd_font_variant = 'mono' },
       completion = {
@@ -735,7 +759,7 @@ require('lazy').setup({
       },
       snippets = { preset = 'luasnip' },
       fuzzy = { implementation = 'lua' },
-      signature = { enabled = true },
+      signature = { enabled = false },
     },
   },
 

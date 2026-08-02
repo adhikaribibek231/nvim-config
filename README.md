@@ -1,6 +1,6 @@
-# Bibek's Neovim Configuration
+# Personal Neovim Configuration
 
-A personal Neovim setup based on the original Kickstart.nvim idea, but customized as my daily-driver editor.
+A Neovim setup based on the original Kickstart.nvim idea, customized for a daily-driver editor.
 
 This configuration is intentionally kept mostly in a single `init.lua` so it is easy to read, modify, and debug. It focuses on a modern terminal-based editing experience with good defaults for backend, Python, TypeScript/JavaScript, web development, Git, fuzzy finding, LSP, formatting, completion, and a cleaner UI.
 
@@ -81,7 +81,7 @@ nvim --version | head -5
 Expected path:
 
 ```text
-/home/bibek/.local/bin/nvim
+$HOME/.local/bin/nvim
 ```
 
 ### 2. System dependencies
@@ -137,14 +137,14 @@ https://www.nerdfonts.com/font-downloads
 If the extracted folder is at:
 
 ```text
-/home/bibek/Downloads/JetBrainsMono
+$HOME/Downloads/JetBrainsMono
 ```
 
 install it with:
 
 ```bash
 mkdir -p ~/.local/share/fonts
-cp /home/bibek/Downloads/JetBrainsMono/*.ttf ~/.local/share/fonts/
+cp "$HOME"/Downloads/JetBrainsMono/*.ttf ~/.local/share/fonts/
 fc-cache -fv
 ```
 
@@ -193,13 +193,13 @@ mv ~/.cache/nvim ~/.cache/nvim.backup
 Clone this repository:
 
 ```bash
-git clone git@github.com:adhikaribibek231/nvim-config.git ~/.config/nvim
+git clone git@github.com:your-username/nvim-config.git ~/.config/nvim
 ```
 
 Or using HTTPS:
 
 ```bash
-git clone https://github.com/adhikaribibek231/nvim-config.git ~/.config/nvim
+git clone https://github.com/your-username/nvim-config.git ~/.config/nvim
 ```
 
 Open Neovim:
